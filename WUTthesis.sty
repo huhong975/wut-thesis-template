@@ -1,0 +1,462 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{WUTthesis}[2026/03/10 Wuhan University of Technology thesis package]
+
+\RequirePackage[top=3.5cm, bottom=3.5cm, left=3.2cm, right=3.2cm]{geometry}
+\RequirePackage{xkeyval}
+\RequirePackage{changepage}
+\RequirePackage{fancyhdr}
+\RequirePackage{fontspec}
+\RequirePackage{graphicx}
+\RequirePackage{setspace}
+\RequirePackage{ifthen}
+\RequirePackage{xeCJKfntef}
+\RequirePackage{etoolbox}
+\RequirePackage{titletoc}
+\RequirePackage{xcolor}
+
+\def\wutChinesetype{}
+\def\wutChinesedegree{}
+
+\DeclareOptionX{Chinesetype}{\def\wutChinesetype{#1}}
+\ExecuteOptionsX{Chinesetype=工学}
+
+\DeclareOptionX{Chinesedegree}{\def\wutChinesedegree{#1}}
+\ExecuteOptionsX{Chinesedegree=博士}
+
+\DeclareOptionX*{\PackageWarning{WUTthesis}{`\CurrentOption' ignored}}
+\ProcessOptionsX\relax
+
+\setCJKfamilyfont{华文中宋}[Path=./, Extension=.ttf]{STZhongsong}
+\newcommand{\STZhongsong}{\CJKfamily{华文中宋}}
+% \setmainfont{Times New Roman}
+% \setCJKmainfont{SimSun}[BoldFont=SimHei, ItalicFont=KaiTi]
+\newfontfamily\WUTTimesNewRoman{Times New Roman}
+\newfontfamily\WUTEnglishTitleFont{Times New Roman}
+
+\setlength{\headheight}{14pt}
+\ctexset{contentsname={目次}}
+\raggedbottom
+
+\makeatletter
+\patchcmd{\l@chapter}{\vskip 1.0em \@plus\p@}{}{}{}
+
+\newcommand{\WUT@mainheadertext}{武汉理工大学\wutChinesedegree 学位论文}
+\newcommand{\WUT@setleading}[1]{\setlength{\baselineskip}{#1}}
+\newcommand{\WUT@bodyfont}{\normalfont\zihao{-4}\WUT@setleading{20pt}}
+\newcommand{\WUTblankpage}{%
+  \clearpage
+  {\thispagestyle{empty}\null\clearpage}%
+}
+\newcommand{\WUT@centeredtitle}[2]{%
+  \begin{center}
+    {#1 #2\par}%
+  \end{center}
+}
+
+\fancypagestyle{wut@empty}{%
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0pt}%
+}
+
+\fancypagestyle{wut@frontmatter}{%
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0pt}%
+  \fancyfoot[C]{\thepage}%
+}
+
+\fancypagestyle{wut@mainmatter}{%
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0.4pt}%
+  \fancyhead[C]{\color{gray}\zihao{5}\songti \WUT@mainheadertext}%
+  \fancyfoot[C]{\thepage}%
+}
+
+\pagestyle{wut@mainmatter}
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0pt}%
+}
+
+\def\wutclassificationnumber{}
+\newcommand{\WUTclassificationnumber}[1]{\def\wutclassificationnumber{#1}}
+\def\wutconfidentiality{}
+\newcommand{\WUTconfidentiality}[1]{\def\wutconfidentiality{#1}}
+\def\wutUDC{}
+\newcommand{\WUTUDC}[1]{\def\wutUDC{#1}}
+\def\wutuniversitycode{}
+\newcommand{\WUTuniversitycode}[1]{\def\wutuniversitycode{#1}}
+
+\def\wutChinesetitle{}
+\newcommand{\WUTChinesetitle}[1]{\def\wutChinesetitle{#1}}
+\def\wutEnglishtitlefirstline{}
+\def\wutEnglishtitlesecondline{}
+\newcommand{\WUTEnglishtitle}[2]{%
+  \def\wutEnglishtitlefirstline{#1}%
+  \def\wutEnglishtitlesecondline{#2}%
+}
+
+\def\wutauthorChinesename{}
+\newcommand{\WUTauthor}[1]{%
+  \def\wutauthorChinesename{#1}%
+}
+
+\def\wutstudentid{}
+\newcommand{\WUTstudentid}[1]{\def\wutstudentid{#1}}
+
+\def\wutsupervisorChinesename{}
+\def\wutsupervisortitle{}
+\def\wutsupervisordegree{}
+\def\wutsupervisororganization{}
+\def\wutsupervisorzipcode{}
+\newcommand{\WUTsupervisor}[5]{%
+  \def\wutsupervisorChinesename{#1}%
+  \def\wutsupervisortitle{#2}%
+  \def\wutsupervisordegree{#3}%
+  \def\wutsupervisororganization{#4}%
+  \def\wutsupervisorzipcode{#5}%
+}
+
+\def\wutvicesupervisorswitch{off}
+\def\wutvicesupervisorname{}
+\def\wutvicesupervisortitle{}
+\def\wutvicesupervisordegree{}
+\def\wutvicesupervisororganization{}
+\def\wutvicesupervisorzipcode{}
+\newcommand{\WUT@secondcovervicesupervisorrows}{}
+\newcommand{\WUTvicesupervisor}[6]{%
+  \def\wutvicesupervisorswitch{#1}%
+  \def\wutvicesupervisorname{#2}%
+  \def\wutvicesupervisortitle{#3}%
+  \def\wutvicesupervisordegree{#4}%
+  \def\wutvicesupervisororganization{#5}%
+  \def\wutvicesupervisorzipcode{#6}%
+  \ifthenelse{\equal{#1}{on}}{%
+    \renewcommand{\WUT@secondcovervicesupervisorrows}{%
+      \WUT@coverrowstrutB 副指导教师 & 姓名 & \WUT@coverunderline{3.22cm}{\kaishu\wutvicesupervisorname} & \hspace{0.25cm}职称 & \WUT@coverunderline{3.41cm}{\kaishu\wutvicesupervisortitle} & \hspace{0.25cm}学位 & \WUT@coverunderline{2.75cm}{\kaishu\wutvicesupervisordegree} \\
+      \WUT@coverrowstrutB & 单位 & \multicolumn{3}{l}{\WUT@coverunderline{8.27cm}{\kaishu\wutvicesupervisororganization}} & \hspace{0.25cm}邮编 & \WUT@coverunderline{2.75cm}{\kaishu\wutvicesupervisorzipcode} \\
+    }%
+  }{%
+    \renewcommand{\WUT@secondcovervicesupervisorrows}{}%
+  }%
+}
+
+\def\wutmajorChinesename{}
+\newcommand{\WUTmajor}[1]{%
+  \def\wutmajorChinesename{#1}%
+}
+
+\def\wutresearchdirection{}
+\newcommand{\WUTresearchdirection}[1]{\def\wutresearchdirection{#1}}
+
+\def\wutinstitute{}
+\newcommand{\WUTinstitute}[1]{%
+  \def\wutinstitute{#1}%
+}
+
+\def\wutcommitteechairman{}
+\newcommand{\WUTcommitteechairman}[1]{\def\wutcommitteechairman{#1}}
+\def\wutcommitteemembersfirstline{}
+\def\wutcommitteememberssecondline{}
+\newcommand{\WUTcommitteemembers}[2]{%
+  \def\wutcommitteemembersfirstline{#1}%
+  \def\wutcommitteememberssecondline{#2}%
+}
+\def\wutfirstreviewer{}
+\def\wutsecondreviewer{}
+\newcommand{\WUTreviewers}[2]{%
+  \def\wutfirstreviewer{#1}%
+  \def\wutsecondreviewer{#2}%
+}
+\def\wutdateofthesiscompletion{}
+\def\wutdateofthesissubmission{}
+\def\wutdateofthesisdefense{}
+\def\wutdateofdegreeaward{}
+\newcommand{\WUTdates}[4]{%
+  \def\wutdateofthesiscompletion{#1}%
+  \def\wutdateofthesissubmission{#2}%
+  \def\wutdateofthesisdefense{#3}%
+  \def\wutdateofdegreeaward{#4}%
+}
+
+\newcommand{\WUTChinesekeywords}[1]{\par\noindent{\zihao{-4} \textbf{关键词：} #1}}
+\newcommand{\WUTEnglishkeywords}[1]{%
+  \par\noindent{\WUTTimesNewRoman\zihao{-4} \textbf{Keywords:} #1}%
+}
+\newcommand{\WUT@thesisdegreeheading}{\wutChinesedegree 学位论文}
+\newcommand{\WUT@settocstyle}{%
+  \titlecontents{chapter}
+    [0em]
+    {\normalfont\heiti\zihao{-4}}
+    {\thecontentslabel~}
+    {}
+    {\titlerule*[0.5pc]{.}\contentspage}%
+  \titlecontents{section}
+    [1.5em]
+    {\normalfont\songti\zihao{-4}}
+    {\thecontentslabel~}
+    {}
+    {\titlerule*[0.5pc]{.}\contentspage}%
+  \titlecontents{subsection}
+    [3.8em]
+    {\normalfont\songti\zihao{-4}}
+    {\thecontentslabel~}
+    {}
+    {\titlerule*[0.5pc]{.}\contentspage}%
+}
+
+\newcommand{\WUT@setfrontmatterheadings}{%
+  \ctexset{%
+    chapter={%
+      name={,},
+      format={\centering\mdseries\heiti\zihao{-3}},
+      number={\arabic{chapter}},
+      aftername={~},
+      beforeskip={18pt},
+      afterskip={18pt},
+      pagestyle={wut@frontmatter},
+      fixskip=true
+    }
+  }%
+}
+
+% Section-level formats are shared by body chapters and back matter chapters.
+\newcommand{\WUT@setcommonsectionheadings}{%
+  \ctexset{%
+    section={%
+      format={\raggedright\mdseries\heiti\zihao{3}},
+      beforeskip={6pt},
+      afterskip={18pt},
+      aftername={~}
+    },
+    subsection={%
+      format={\raggedright\mdseries\heiti\zihao{4}},
+      beforeskip={3pt},
+      afterskip={12pt},
+      aftername={~}
+    },
+    subsubsection={%
+      format={\raggedright\mdseries\heiti\zihao{-4}},
+      beforeskip={3pt},
+      afterskip={6pt},
+      aftername={~}
+    }
+  }%
+}
+
+\newcommand{\WUT@setmainmatterheadings}{%
+  \ctexset{%
+    chapter={%
+      name={,},
+      number={\arabic{chapter}},
+      format={\raggedright\mdseries\heiti\zihao{-2}},
+      aftername={~},
+      beforeskip={6pt},
+      afterskip={30pt},
+      pagestyle={wut@mainmatter},
+      fixskip=true
+    }
+  }%
+  \WUT@setcommonsectionheadings
+}
+
+\newcommand{\WUT@setbackmatterheadings}{%
+  \ctexset{%
+    chapter={%
+      name={,},
+      number={\arabic{chapter}},
+      format={\centering\mdseries\heiti\zihao{-3}},
+      aftername={~},
+      beforeskip={18pt},
+      afterskip={30pt},
+      pagestyle={wut@mainmatter},
+      fixskip=true
+    }
+  }%
+  \WUT@setcommonsectionheadings
+}
+
+\WUT@settocstyle
+\WUT@setmainmatterheadings
+
+% Front matter uses Roman page numbers and suppresses running headers.
+\newcommand{\WUTfrontmatter}{%
+  \frontmatter
+  \let\cleardoublepage\clearpage
+  \pagestyle{wut@frontmatter}%
+  \pagenumbering{Roman}%
+  \setcounter{page}{1}%
+  \WUT@setfrontmatterheadings
+}
+
+% Main matter switches back to thesis headers and Arabic numbering.
+\newcommand{\WUTmainmatter}{%
+  \mainmatter
+  \pagestyle{wut@mainmatter}%
+  \WUT@setmainmatterheadings
+  \WUT@bodyfont
+}
+
+% Back matter keeps the body page style but centers chapter titles.
+\newcommand{\WUTbackmatter}{%
+  \backmatter
+  \pagestyle{wut@mainmatter}%
+  \WUT@setbackmatterheadings
+}
+
+% Keep TOC spacing in one place so school-required adjustments stay centralized.
+\newcommand{\WUTtableofcontents}{%
+  \clearpage
+  \addcontentsline{toc}{chapter}{目次}%
+  \addtocontents{toc}{\protect\setlength{\baselineskip}{20pt}}%
+  \addtocontents{toc}{\protect\setlength{\parskip}{0pt}}%
+  \tableofcontents
+}
+
+\@ifpackageloaded{biblatex}{%
+  \renewcommand{\bibfont}{\zihao{5}}%
+  \AtBeginBibliography{%
+    % Keep each reference entry on one page whenever possible.
+    \interlinepenalty=10000\relax
+    \zihao{5}%
+    \setlength{\baselineskip}{17pt}%
+    \setlength{\bibitemsep}{3pt}%
+    \setlength{\bibparsep}{0pt}%
+    \setlength{\biblabelsep}{0.5em}%
+  }%
+}{}
+
+\newenvironment{WUTChineseabstract}{%
+  \begingroup
+  \thispagestyle{wut@frontmatter}%
+  \addcontentsline{toc}{chapter}{摘要}%
+  \WUT@centeredtitle{\heiti\zihao{-3}\mdseries}{\wutChinesetitle}%
+  \zihao{-4}\WUT@setleading{20pt}%
+  \noindent\textbf{摘要：}\ignorespaces
+}{\par\endgroup\ignorespacesafterend}
+
+\newenvironment{WUTEnglishabstract}{%
+  \begingroup
+  \clearpage
+  \thispagestyle{wut@frontmatter}%
+  \WUT@centeredtitle{\WUTEnglishTitleFont\mdseries\zihao{-3}}{\textbf{\wutEnglishtitlefirstline{} \wutEnglishtitlesecondline}}%
+  \WUTTimesNewRoman\zihao{-4}\WUT@setleading{20pt}%
+  \emergencystretch=1.5em\relax
+  \noindent\textbf{Abstract: }\ignorespaces
+}{\par\endgroup\ignorespacesafterend}
+
+\newenvironment{WUTacknowledgements}{%
+  \thispagestyle{empty}%
+  \WUT@centeredtitle{\heiti\zihao{-3}\mdseries}{致谢}%
+  \kaishu\zihao{-4}\WUT@setleading{20pt}%
+}{\par}
+
+\newcommand{\WUT@coverunderline}[2]{\uline{\makebox[#1][c]{#2}}}
+\newcommand{\WUT@coverrowstrutA}{\rule[-0.30cm]{0pt}{1.00cm}}
+\newcommand{\WUT@coverrowstrutB}{\rule[-0.32cm]{0pt}{0.99cm}}
+
+\newcommand{\WUT@frontcoverinfostyle}{\zihao{3}\fangsong\WUT@setleading{30pt}}
+\newcommand{\WUT@topclassificationstyle}{\fontsize{13pt}{20pt}\selectfont\kaishu}
+\newcommand{\WUT@secondcoverenglishtitlefont}{\WUTTimesNewRoman\fontsize{12pt}{20pt}\selectfont}
+
+\newcommand{\WUT@makefrontcoverinfotable}{%
+  \begin{center}
+    {\WUT@frontcoverinfostyle
+    \begin{tabular}{@{}p{4.99cm}l@{}}
+      \makebox[\linewidth][s]{培 养 单 位 ：} & \wutinstitute \\
+      \makebox[\linewidth][s]{学 科 专 业 ：} & \wutmajorChinesename \\
+      \makebox[\linewidth][s]{论 文 作 者 ：} & \wutauthorChinesename \\
+      \makebox[\linewidth][s]{指 导 教 师 ：} & \wutsupervisorChinesename{} \wutsupervisortitle \\
+      \ifthenelse{\equal{\wutvicesupervisorswitch}{on}}{%
+        \makebox[\linewidth][s]{副 指 导 教 师 ：} & \wutvicesupervisorname{} \wutvicesupervisortitle \\
+      }{}%
+    \end{tabular}}
+  \end{center}
+}
+
+\newcommand{\WUTmakefirstcover}{%
+  \begin{titlepage}
+    \begin{adjustwidth}{-3mm}{3mm}
+      \begin{center}
+        ~ \\
+        \resizebox{0.6\hsize}{!}{\includegraphics{WUT.jpg}} \\[16pt]
+        {\zihao{4}\songti （申请\wutChinesetype\wutChinesedegree 学位论文）}
+
+        {\zihao{4}\linespread{1}\selectfont\vspace{2\baselineskip}}
+
+        \begin{spacing}{1.2}
+          \parbox[t]{13cm}{%
+            \centering
+            \zihao{1}\heiti \wutChinesetitle \\
+            {\WUTEnglishTitleFont\bfseries\zihao{2}\wutEnglishtitlefirstline{} \wutEnglishtitlesecondline}
+          }
+        \end{spacing}
+      \end{center}
+
+      {\zihao{4}\linespread{1}\selectfont\vspace{2\baselineskip}}
+      \WUT@makefrontcoverinfotable
+
+      \vspace{60pt}
+      \begin{center}
+        {\zihao{3}\heiti \wutdateofthesiscompletion}
+      \end{center}
+    \end{adjustwidth}
+  \end{titlepage}%
+}
+
+\newcommand{\WUTmakesecondcover}{%
+  \begin{titlepage}
+    \begin{center}
+      \vspace*{-16pt}
+      {\WUT@topclassificationstyle
+      \begin{minipage}[t][20mm][t]{60mm}
+        中图分类号 \WUT@coverunderline{30mm}{\wutclassificationnumber} \\
+        {\scalebox{0.8}[1]{{\WUTTimesNewRoman UDC}分类号~}} \WUT@coverunderline{30mm}{\wutUDC}
+      \end{minipage}
+      \hfill
+      \begin{minipage}[t][20mm][t]{60mm}
+        学校代码 \WUT@coverunderline{30mm}{\wutuniversitycode} \\
+        密\hspace{2em}级 \WUT@coverunderline{30mm}{\wutconfidentiality}
+      \end{minipage}\par}
+
+      \vspace{13pt}
+      \resizebox{0.6\hsize}{!}{\includegraphics{WUT.jpg}} \\
+      \vspace{5mm}
+      {\zihao{1}\STZhongsong \makebox[60mm][s]{\WUT@thesisdegreeheading}}
+      \vspace{21pt}
+
+      \begin{spacing}{1.0}
+        \zihao{4}\STZhongsong
+        \setlength{\tabcolsep}{0pt}
+        \noindent\makebox[\textwidth][c]{%
+          \begin{tabular}{@{}p{2.98cm}p{1.50cm}p{3.22cm}p{1.64cm}p{3.41cm}p{1.50cm}p{2.75cm}@{}}
+            \WUT@coverrowstrutA 题\qquad 目 & \multicolumn{6}{l}{\WUT@coverunderline{14.02cm}{\kaishu\wutChinesetitle}} \\
+            \WUT@coverrowstrutA 英文题目 & \multicolumn{6}{l}{\WUT@coverunderline{14.02cm}{{\WUT@secondcoverenglishtitlefont \wutEnglishtitlefirstline}}} \\
+            \WUT@coverrowstrutA & \multicolumn{6}{l}{\WUT@coverunderline{14.02cm}{{\WUT@secondcoverenglishtitlefont \wutEnglishtitlesecondline}}} \\
+            \WUT@coverrowstrutB 论文作者 & \multicolumn{2}{l}{\WUT@coverunderline{4.72cm}{\kaishu\wutauthorChinesename}} & \multicolumn{4}{l}{\makebox[1.64cm][l]{\hspace{0.25cm}学号}\WUT@coverunderline{7.66cm}{\wutstudentid}} \\
+            \WUT@coverrowstrutB 指导教师 & 姓名 & \WUT@coverunderline{3.22cm}{\kaishu\wutsupervisorChinesename} & \hspace{0.25cm}职称 & \WUT@coverunderline{3.41cm}{\kaishu\wutsupervisortitle} & \hspace{0.25cm}学位 & \WUT@coverunderline{2.75cm}{\kaishu\wutsupervisordegree} \\
+            \WUT@coverrowstrutB & 单位 & \multicolumn{3}{l}{\WUT@coverunderline{8.27cm}{\kaishu\wutsupervisororganization}} & \hspace{0.25cm}邮编 & \WUT@coverunderline{2.75cm}{\kaishu\wutsupervisorzipcode} \\
+            \WUT@secondcovervicesupervisorrows
+            \multicolumn{7}{@{}l@{}}{\WUT@coverrowstrutB \makebox[3.99cm][l]{学科专业名称}\WUT@coverunderline{5.57cm}{\kaishu\wutmajorChinesename}\makebox[3.68cm][l]{\hspace{0.25cm}研究方向}\WUT@coverunderline{3.76cm}{\kaishu\wutresearchdirection}} \\
+            \multicolumn{7}{@{}l@{}}{\WUT@coverrowstrutB \makebox[3.99cm][l]{论文提交日期}\WUT@coverunderline{5.57cm}{\kaishu\wutdateofthesissubmission}\makebox[3.68cm][l]{\hspace{0.25cm}论文答辩日期}\WUT@coverunderline{3.76cm}{\kaishu\wutdateofthesisdefense}} \\
+            \multicolumn{7}{@{}l@{}}{\WUT@coverrowstrutB \makebox[3.99cm][l]{培养单位}\WUT@coverunderline{5.57cm}{\kaishu\wutinstitute}\makebox[3.68cm][l]{\hspace{0.25cm}学位授予日期}\WUT@coverunderline{3.76cm}{\kaishu\wutdateofdegreeaward}} \\
+            \multicolumn{7}{@{}l@{}}{%
+              \WUT@coverrowstrutB
+              \makebox[3.99cm][l]{答辩委员会主席}%
+              \WUT@coverunderline{5.57cm}{\kaishu\wutcommitteechairman}%
+              \makebox[3.68cm][l]{\hspace{0.25cm}\makebox[6em][s]{评 阅 人}}%
+              \begin{tabular}[t]{@{}l@{}}
+                \WUT@coverunderline{3.76cm}{\kaishu\wutfirstreviewer}\\[0.02em]
+                \WUT@coverunderline{3.76cm}{\kaishu\wutsecondreviewer}
+              \end{tabular}%
+            } \\
+            \multicolumn{7}{@{}l@{}}{\WUT@coverrowstrutB \makebox[3.99cm][l]{答辩委员会委员}\WUT@coverunderline{13.01cm}{\kaishu\wutcommitteemembersfirstline}} \\
+            \multicolumn{7}{@{}l@{}}{\WUT@coverrowstrutB \makebox[3.99cm][l]{}\WUT@coverunderline{13.01cm}{\kaishu\wutcommitteememberssecondline}} \\
+          \end{tabular}%
+        }
+      \end{spacing}
+      \vfill
+      \raisebox{7pt}{\zihao{4}\STZhongsong \wutdateofthesiscompletion}
+    \end{center}
+  \end{titlepage}%
+}
+\makeatother

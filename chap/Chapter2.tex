@@ -1,0 +1,34 @@
+\chapter{排版示例}
+
+\section{图片示例}
+\figref{fig:sample_logo}展示了图片标题、图片编号和交叉引用效果。建议将图片文件统一放入 \texttt{figure/} 目录分章节存放，并使用 \verb|\includegraphics| 命令插入。
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.35\textwidth]{WUT.jpg}
+  \caption{示例图片}
+  \label{fig:sample_logo}
+\end{figure}
+
+\section{表格示例}
+\tabref{tab:sample_table}展示了表格标题、表格编号和交叉引用效果。
+
+\begin{table}[H]
+  \centering
+  \caption{示例表格}
+  \label{tab:sample_table}
+  \begin{tabular}{cc}
+    \toprule
+    项目 & 说明 \\
+    \midrule
+    编译引擎 & XeLaTeX \\
+    参考文献 & Biber \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{公式示例}
+公式\ref{eq:sample_equation} 展示了公式编号和交叉引用效果。
+\begin{equation}
+  E = mc^2
+  \label{eq:sample_equation}
+\end{equation}

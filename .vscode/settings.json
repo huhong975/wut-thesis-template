@@ -1,0 +1,204 @@
+{
+    // ****************
+    //		LaTeX
+    // ****************
+    "files.associations": {
+        "*.sty": "latex-expl3",
+        "*.cls": "latex-expl3"
+    },
+    "latex-workshop.latex.autoBuild.run": "onSave",
+    "latex-workshop.message.error.show": false,
+    "latex-workshop.message.warning.show": true,
+    "latex-workshop.latex.recipe.default": "xelatex & biber",
+    "latex-workshop.latex.outDir": "./build",
+    "latex-workshop.view.pdf.viewer": "tab",
+    "latex-workshop.synctex.synctexjs.enabled": true,
+    "latex-workshop.formatting.latex": "latexindent",
+    "latex-workshop.showContextMenu": true,
+    // "latex-workshop.view.pdf.invert": 1.0,
+    // "latex-workshop.viewer.pdf.internal.keyboardEvent": "auto",
+    "latex-workshop.view.pdf.internal.synctex.keybinding": "double-click",
+    // "latex-workshop.intellisense.package.dirs": ["./"],
+    "latex-workshop.latex.clean.method": "glob",
+    "latex-workshop.latex.clean.fileTypes": [
+        // "*.abs",
+        // "*.acn",
+        // "*.acr",
+        // "*.alg",
+        // "*.aux",
+        // "*.bak",
+        // "*.bbl",
+        // "*.bcf",
+        // "*.blg",
+        // "*.col",
+        // "*.con",
+        // "*.cor",
+        // "*.DS_Store",
+        // "*.fdb_latexmk",
+        // "*.fls",
+        // "*.glg",
+        // "*.glo",
+        // "*.gls",
+        // "*.gz",
+        // "*.idx",
+        // "*.ilg",
+        // "*.ind",
+        // "*.loc",
+        // "*.lof",
+        // "*.log",
+        // "*.los",
+        // "*.lot",
+        // "*.nav",
+        // "*.nlo",
+        // "*.nls",
+        // "*.out",
+        // "*.pdfsync",
+        // "*.sav",
+        // "*.sgl",
+        // "*.sgn",
+        // "*.sgr",
+        // "*.slg",
+        // "*.sll",
+        // "*.sln",
+        // "*.slo",
+        // "*.slr",
+        // "*.sls",
+        // "*.snm",
+        // "*.soc",
+        // "*.spl",
+        // "*.synctex",
+        // "*.synctex(busy)",
+        // "*.synctex.gz(busy)",
+        // "*.thm",
+        // "*.toc",
+        // "*.toe",
+        // "*.xdv",
+        // "*.xdy",
+        // "*.xml",
+        // "*.xwm",
+    ],
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "xelatex",
+            "tools": [ "xelatex" ],
+        },
+        {
+            "name": "xelatex & bibtex",
+            "tools": [ "xelatex", "bibtex", "xelatex", "xelatex" ]
+        },
+        {
+            "name": "xelatex & biber",
+            "tools": [ "xelatex", "biber", "xelatex" ]
+        },
+        {
+            "name": "pdflatex",
+            "tools": [ "pdflatex" ]
+        },
+        {
+            "name": "pdflatex & bibtex",
+            "tools": [ "pdflatex", "bibtex", "pdflatex", "pdflatex" ]
+        },
+        {
+            "name": "pdflatex & biber",
+            "tools": [ "pdflatex", "biber", "pdflatex" ]
+        },
+        {
+            "name": "latexmk pdf",
+            "tools": [ "latexmk -pdf" ]
+        },
+        {
+            "name": "latexmk xe",
+            "tools": [ "latexmk -xe" ]
+        },
+    ],
+    "latex-workshop.latex.tools": [
+        {
+            "name": "pdflatex",
+            "command": "pdflatex",
+            "args": [
+                "-synctex=1",
+                "-shell-escape",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "%DOCFILE%"
+            ]
+        },
+        {
+            "name": "xelatex",
+            "command": "xelatex",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "-output-directory=build",
+                "%DOCFILE%"
+            ]
+        },
+        {
+            "name": "xelatex batchmode",
+            "command": "xelatex",
+            "args": [
+                "-synctex=-1",
+                "-interaction=batchmode",
+                "-shell-escape",
+                "-8bit",
+                "%DOCFILE%"
+            ]
+        },
+        {
+            "name": "latexmk -pdf",
+            "command": "latexmk",
+            "args": [
+                "-pdf",
+                "-synctex=-1",
+                "-interaction=errorstopmode",
+                "-file-line-error",
+                "%DOCFILE%"
+            ]
+        },
+        {
+            "name": "latexmk -xe",
+            "command": "latexmk",
+            "args": [
+                "-pdfxe",
+                "-synctex=-1",
+                "-interaction=errorstopmode",
+                "-file-line-error",
+                "%DOCFILE%"
+            ]
+        },
+        {
+            "name": "bibtex",
+            "command": "bibtex",
+            "args": [
+                "%DOCFILE%"
+            ]
+        },
+        {
+            "name": "biber",
+            "command": "biber",
+            "args": [
+                "-winunicode",
+                "%DOCFILE%",
+                "-output-directory=build"
+            ]
+        },
+        {
+            "name": "JP",
+            "command": "platex",
+            "args": [
+                "-synctex=-1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "%DOCFILE%"
+            ]
+        },
+        {
+            "name": "dvipdfmx",
+            "command": "dvipdfmx",
+            "args": [
+                "%DOCFILE%"
+            ]
+        },
+    ]
+}
